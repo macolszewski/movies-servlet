@@ -24,21 +24,28 @@ public class ActorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         PrintWriter printWriter = resp.getWriter();
-        String responseJson = gson.toJson(dbActorRepository.getAll());
+        String id = getPathVariable(req);
+        String responseJson = null;
+        if (id != null) {
+            for (Actor actor: dbActorRepository.getAll()) {
+                if (actor.getId().equals(id))
+                    responseJson = gson.toJson(actor);
+            }
+        } else {
+            responseJson = gson.toJson(dbActorRepository.getAll());
+        }
         printWriter.print(responseJson);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        if (!getPathVariable(req).equals("actor")) {
-            String id = getPathVariable(req);
-            String body = getBody(req);
-            Actor actor = gson.fromJson(body, Actor.class);
+        String body = getBody(req);
+        Actor actor = gson.fromJson(body, Actor.class);
+        String id = getPathVariable(req);
+        if (id != null) {
             dbActorRepository.update(id, actor);
-        } else  {
-            String body = getBody(req);
-            Actor actor = gson.fromJson(body, Actor.class);
+        } else {
             dbActorRepository.add(actor);
         }
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -64,7 +71,11 @@ public class ActorServlet extends HttpServlet {
     }
 
     protected String getPathVariable(HttpServletRequest req) {
-        String[] path = req.getPathInfo().split("/");
-        return path[path.length-1];
+        if (req.getPathInfo() == null) {
+            return null;
+        } else {
+            String[] path = req.getPathInfo().split("/");
+            return path[path.length - 1];
+        }
     }
 }

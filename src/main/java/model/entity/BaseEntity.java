@@ -16,5 +16,8 @@ abstract class BaseEntitiy {
     @Column( name = "id")
     private String id;
 
+    public String getId() {
+        return id;
+    }
 }
 
