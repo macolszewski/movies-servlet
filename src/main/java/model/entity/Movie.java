@@ -92,25 +92,4 @@ public class Movie extends BaseEntitiy {
         this.movieGenere = movieGenere;
     }
 
-    @ManyToOne(optional = false)
-    private MovieGenere movieGeneres;
-
-    public MovieGenere getMovieGeneres() {
-        return movieGeneres;
-    }
-
-    public void setMovieGeneres(MovieGenere movieGeneres) {
-        this.movieGeneres = movieGeneres;
-    }
-
-    @ManyToOne(optional = false)
-    private Director directors;
-
-    public Director getDirectors() {
-        return directors;
-    }
-
-    public void setDirectors(Director directors) {
-        this.directors = directors;
-    }
 }

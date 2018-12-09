@@ -11,7 +11,7 @@ public class MovieGenere extends BaseEntitiy {
     @Column(name = "name")
     public String name;
 
-    @OneToMany(mappedBy= "movieGeneres")
+    @OneToMany
     private Collection<Movie> movies = new ArrayList<>();
 
     public MovieGenere() {

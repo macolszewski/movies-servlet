@@ -1,6 +1,9 @@
+package model;
+
 import com.google.gson.Gson;
-import model.ActorService;
-import model.entity.Actor;
+import model.entity.Director;
+import model.entity.Movie;
+import model.repository.DBMovieRepository;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -12,16 +15,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "actor", urlPatterns = "/actor/*")
-public class ActorServlet extends HttpServlet {
+@WebServlet(name = "movie", urlPatterns = "/movie/*")
+public class MovieServlet extends HttpServlet {
     @Inject
-    private ActorService actorService;
+    private DBMovieRepository dbMovieRepository;
     private Gson gson;
-
-    public ActorServlet() {
+    public MovieServlet() {
         gson = new Gson();
     }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
@@ -29,22 +30,12 @@ public class ActorServlet extends HttpServlet {
         String id = getPathVariable(req);
         String responseJson = null;
         if (id != null) {
-            for (Actor actor : actorService.getAll()) {
-                if (actor.getId().equals(id))
-                    responseJson = gson.toJson(actor);
+            for (Movie movie: dbMovieRepository.getAll()) {
+                if (movie.getId().equals(id))
+                    responseJson = gson.toJson(movie);
             }
         } else {
-            String name = req.getParameter("name");
-            String surname = req.getParameter("surname");
-            if (name != null & surname != null) {
-                responseJson = gson.toJson(actorService.findByName(name, surname));
-            } else if (name != null) {
-                responseJson = gson.toJson(actorService.findByName(name));
-            } else if (surname != null) {
-                responseJson = gson.toJson(actorService.findBySurname(surname));
-            } else {
-                responseJson = gson.toJson(actorService.getAll());
-            }
+            responseJson = gson.toJson(dbMovieRepository.getAll());
         }
         printWriter.print(responseJson);
     }
@@ -53,12 +44,12 @@ public class ActorServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String body = getBody(req);
-        Actor actor = gson.fromJson(body, Actor.class);
+        Movie movie = gson.fromJson(body, Movie.class);
         String id = getPathVariable(req);
         if (id != null) {
-            actorService.update(id, actor);
+            dbMovieRepository.update(id, movie);
         } else {
-            actorService.add(actor);
+            dbMovieRepository.add(movie);
         }
         resp.setStatus(HttpServletResponse.SC_OK);
     }
@@ -66,7 +57,7 @@ public class ActorServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = getPathVariable(req);
-        actorService.delete(id);
+        dbMovieRepository.delete(id);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -86,7 +77,7 @@ public class ActorServlet extends HttpServlet {
             return null;
         } else {
             String[] path = req.getPathInfo().split("/");
-            if (path.length > 0) {
+            if (path.length>0) {
 
                 return path[path.length - 1];
             } else {

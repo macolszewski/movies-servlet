@@ -13,7 +13,7 @@ public class Director extends BaseEntitiy{
 
     @Embedded
     private Human human;
-    @OneToMany(mappedBy= "director")
+    @OneToMany(fetch = FetchType.EAGER)
     private Collection<Movie> movies = new ArrayList<>();
 
     public Director() {
@@ -29,6 +29,14 @@ public class Director extends BaseEntitiy{
 
     public void setHuman(Human human) {
         this.human = human;
+    }
+
+    public Collection<Movie> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Collection<Movie> movies) {
+        this.movies = movies;
     }
 
     @Override
