@@ -12,10 +12,6 @@ import java.util.Collection;
 public class Director extends BaseEntitiy{
 
     @Embedded
-    @AttributeOverrides({@AttributeOverride(name = "name",column = @Column(name="imie")),
-            @AttributeOverride(name = "surname",column = @Column(name="nazwisko")),
-            @AttributeOverride(name = "birthDate",column = @Column(name = "data_urodzenia")),
-            @AttributeOverride(name = "nationality",column = @Column(name = "narodowość"))})
     private Human human;
     @OneToMany(mappedBy= "director")
     private Collection<Movie> movies = new ArrayList<>();

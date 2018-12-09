@@ -12,12 +12,8 @@ import java.util.Collection;
 public class Actor extends BaseEntitiy{
 
     @Embedded
-    @AttributeOverrides({@AttributeOverride(name = "name",column = @Column(name="imie")),
-            @AttributeOverride(name = "surname",column = @Column(name="nazwisko")),
-            @AttributeOverride(name = "birthDate",column = @Column(name = "data_urodzenia")),
-            @AttributeOverride(name = "nationality",column = @Column(name = "narodowość"))})
     private Human human;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Movie> movies = new ArrayList<>();
 
     public Actor() {
@@ -33,6 +29,14 @@ public class Actor extends BaseEntitiy{
 
     public void setHuman(Human human) {
         this.human = human;
+    }
+
+    public Collection<Movie> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Collection<Movie> movies) {
+        this.movies = movies;
     }
 
     @Override
