@@ -14,5 +14,6 @@
         <mapping class="model.entity.Actor"/>
         <mapping class="model.entity.Movie"/>
         <mapping class="model.entity.MovieGenere"/>
+        <mapping class="model.entity.User"/>
     </session-factory>
 </hibernate-configuration>
